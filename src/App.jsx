@@ -3,6 +3,7 @@ import { AdaptiveDpr } from "@react-three/drei";
 import { Suspense } from "react";
 import LoadingScreen from "./components/dom/LoadingScreen";
 import TerrainPhysicsDemo from "./components/canvas/TerrainPhysicsDemo";
+import Overlay from "./components/dom/Overlay";
 
 function App() {
 	return (
@@ -11,6 +12,7 @@ function App() {
 				<AdaptiveDpr />
 				<TerrainPhysicsDemo />
 			</Canvas>
+			<Overlay />
 		</Suspense>
 	);
 }

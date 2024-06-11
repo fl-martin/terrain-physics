@@ -1,5 +1,5 @@
 import { RigidBody } from "@react-three/rapier";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { MeshStandardMaterial } from "three";
 import TerrainManager from "./TerrainManager";
 import ThreeCustomShaderMaterial from "three-custom-shader-material";
@@ -9,6 +9,7 @@ import displacementMapURL from "../../assets/images/metal2/Metal_scratched_009_h
 import normalMapURL from "../../assets/images/metal2/Metal_scratched_009_normal.jpg";
 import roughnessMapURL from "../../assets/images/metal2/Metal_scratched_009_roughness.jpg";
 import aoMapURL from "../../assets/images/metal2/Metal_scratched_009_ambientOcclusion.jpg";
+import useDemoStore from "../store";
 const ratioScale = Math.min(2, Math.max(0.1, window.innerWidth / 1920));
 
 const Terrain = ({ position }) => {
@@ -19,7 +20,8 @@ const Terrain = ({ position }) => {
 		roughnessMap: roughnessMapURL,
 		aoMap: aoMapURL,
 	});
-	const [seed, setSeed] = useState(Date.now()); // Declarado aqui para, junto a "key", generar el remount de RigidBody para actualizar colliders
+	const seed = useDemoStore((state) => state.seed);
+	const setSeed = useDemoStore((state) => state.setSeed);
 
 	const baseMat = useMemo(
 		() =>

@@ -7,7 +7,6 @@ import { useSpring, animated } from "@react-spring/three";
 import ShootBall from "./ShootBall";
 import { useThree } from "@react-three/fiber";
 import useDemoStore from "../store";
-import Terrain from "./Terrain";
 
 const Thing = ({ item, position }) => {
 	const Thang = itemMap[item];
@@ -174,7 +173,7 @@ const Elements = ({ cursorPos, children }) => {
 
 	const mode = useDemoStore((state) => state.mode);
 
-	const controls = useControls("Cursor", {
+	const controls = useControls("Create", {
 		Element: {
 			options: {
 				Box: "Box",
@@ -182,9 +181,6 @@ const Elements = ({ cursorPos, children }) => {
 				Ball: "Ball",
 				None: null,
 			},
-		},
-		Mode: {
-			options: { Create: "create", Shoot: "shoot" },
 		},
 	});
 
@@ -205,7 +201,7 @@ const Elements = ({ cursorPos, children }) => {
 				type: controls.Element,
 				position: [e.point.x, e.point.y + 0.4, e.point.z],
 			});
-		} else if (controls.Mode === "shoot") {
+		} else if (mode === "shoot") {
 			// eliminar pelota on collide
 			setShootBalls((curr) => [
 				...curr,
@@ -223,11 +219,7 @@ const Elements = ({ cursorPos, children }) => {
 				{items.map((item, i) => (
 					<Thing item={item.type} position={item.position} key={i} />
 				))}
-				<Terrain
-					position={[0, -2, 0]}
-					onPointerMove={onPointerMoveHandler}
-					onClick={onClickHandler}
-				/>
+				{children}
 			</group>
 
 			{shootBalls.map((item, i) => {
@@ -246,7 +238,7 @@ const Elements = ({ cursorPos, children }) => {
 			<Cursor
 				position={cursorPos}
 				selectedElement={controls.Element}
-				mode={controls.Mode}
+				mode={mode}
 			/>
 		</>
 	);

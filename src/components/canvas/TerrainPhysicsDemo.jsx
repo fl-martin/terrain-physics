@@ -4,6 +4,7 @@ import { Physics } from "@react-three/rapier";
 import { useControls } from "leva";
 import { useEffect, useRef } from "react";
 import { Color, Vector2, Vector3 } from "three";
+import Terrain from "./Terrain";
 import Elements from "./Elements";
 
 const TerrainPhysicsDemo = () => {
@@ -52,7 +53,9 @@ const TerrainPhysicsDemo = () => {
 					shadow-mapSize={new Vector2(1024, 1024)}
 				></directionalLight>
 
-				<Elements cursorPos={cursorPos} />
+				<Elements cursorPos={cursorPos}>
+					<Terrain position={[0, -2, 0]} />
+				</Elements>
 			</Physics>
 			<Environment preset="apartment"></Environment>
 		</>

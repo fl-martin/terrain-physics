@@ -1,5 +1,5 @@
 import { useSpring, animated } from "@react-spring/three";
-import { Box, Sphere } from "@react-three/drei";
+import { Sphere } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 
