@@ -2,12 +2,12 @@ import { Environment, OrbitControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { useControls } from "leva";
-import { Suspense, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Color, Vector2, Vector3 } from "three";
-import Terrain from "./Terrain";
 import Elements from "./Elements";
 
 const TerrainPhysicsDemo = () => {
+	const controlsRef = useRef();
 	const dirL = useRef();
 	const { scene, camera } = useThree((state) => state);
 	const cursorPos = useRef(new Vector3());
@@ -15,6 +15,7 @@ const TerrainPhysicsDemo = () => {
 	useEffect(() => {
 		scene.background = new Color(0x00aae4);
 		camera.position.set(-2, 5, 12);
+		controlsRef.current.listenToKeyEvents(window);
 	}, []);
 
 	const controls = useControls({
@@ -31,9 +32,11 @@ const TerrainPhysicsDemo = () => {
 				debug={controls["Show colliders"]}
 			>
 				<OrbitControls
+					ref={controlsRef}
 					minPolarAngle={0}
 					maxPolarAngle={Math.PI / 2.1}
 					enablePan={false}
+					keyEvents={true}
 				/>
 				<ambientLight intensity={0.5} />
 
@@ -49,9 +52,7 @@ const TerrainPhysicsDemo = () => {
 					shadow-mapSize={new Vector2(1024, 1024)}
 				></directionalLight>
 
-				<Elements cursorPos={cursorPos}>
-					<Terrain position={[0, -2, 0]} />
-				</Elements>
+				<Elements cursorPos={cursorPos} />
 			</Physics>
 			<Environment preset="apartment"></Environment>
 		</>

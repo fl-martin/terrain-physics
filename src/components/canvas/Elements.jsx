@@ -6,6 +6,8 @@ import Cursor from "./Cursor";
 import { useSpring, animated } from "@react-spring/three";
 import ShootBall from "./ShootBall";
 import { useThree } from "@react-three/fiber";
+import useDemoStore from "../store";
+import Terrain from "./Terrain";
 
 const Thing = ({ item, position }) => {
 	const Thang = itemMap[item];
@@ -170,6 +172,8 @@ const Elements = ({ cursorPos, children }) => {
 		setItems((curr) => [...curr, str]);
 	};
 
+	const mode = useDemoStore((state) => state.mode);
+
 	const controls = useControls("Cursor", {
 		Element: {
 			options: {
@@ -184,40 +188,46 @@ const Elements = ({ cursorPos, children }) => {
 		},
 	});
 
+	function onPointerMoveHandler(e) {
+		e.stopPropagation();
+		e.target.setPointerCapture(e.pointerId);
+		cursorPos.current.copy(e.point);
+	}
+
+	function onClickHandler(e) {
+		e.stopPropagation();
+		e.target.setPointerCapture(e.pointerId);
+
+		if (!controls.Element) return;
+
+		if (mode === "create") {
+			addItem({
+				type: controls.Element,
+				position: [e.point.x, e.point.y + 0.4, e.point.z],
+			});
+		} else if (controls.Mode === "shoot") {
+			// eliminar pelota on collide
+			setShootBalls((curr) => [
+				...curr,
+				e.ray.direction.multiplyScalar(e.distance),
+			]);
+		}
+	}
+
 	return (
 		<>
 			<group
-				onPointerMove={(e) => {
-					// Only the mesh closest to the camera will be processed
-					e.stopPropagation();
-					e.target.setPointerCapture(e.pointerId);
-					cursorPos.current.copy(e.point);
-				}}
-				onClick={(e) => {
-					e.stopPropagation();
-					e.target.setPointerCapture(e.pointerId);
-
-					if (!controls.Element) return;
-
-					if (controls.Mode === "create") {
-						addItem({
-							type: controls.Element,
-							position: [e.point.x, e.point.y + 0.4, e.point.z],
-						});
-					} else if (controls.Mode === "shoot") {
-						// eliminar pelota on collide
-						setShootBalls((curr) => [
-							...curr,
-							e.ray.direction.multiplyScalar(e.distance),
-						]);
-						//console.log(shootBalls);
-					}
-				}}
+				onPointerMove={onPointerMoveHandler}
+				onClick={onClickHandler}
 			>
 				{items.map((item, i) => (
 					<Thing item={item.type} position={item.position} key={i} />
 				))}
-				{children}
+				<Terrain
+					position={[0, -2, 0]}
+					onPointerMove={onPointerMoveHandler}
+					onClick={onClickHandler}
+				/>
 			</group>
 
 			{shootBalls.map((item, i) => {
