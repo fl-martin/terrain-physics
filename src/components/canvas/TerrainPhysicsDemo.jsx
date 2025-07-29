@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { Color, Vector2, Vector3 } from "three";
 import Terrain from "./Terrain";
 import Elements from "./Elements";
+import apartmentHDR from "../../assets/images/lebombo_1k.hdr";
 
 const TerrainPhysicsDemo = () => {
 	const controlsRef = useRef();
@@ -57,7 +58,7 @@ const TerrainPhysicsDemo = () => {
 					<Terrain position={[0, -2, 0]} />
 				</Elements>
 			</Physics>
-			<Environment preset="apartment"></Environment>
+			<Environment files={apartmentHDR}></Environment>
 		</>
 	);
 };
